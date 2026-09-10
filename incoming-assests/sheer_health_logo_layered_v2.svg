@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 741" width="900" height="741">
+  <defs>
+    <linearGradient id="crossGrad" x1="10%" y1="95%" x2="95%" y2="5%">
+      <stop offset="0%" stop-color="#0A7FD1"/>
+      <stop offset="50%" stop-color="#1FB4C4"/>
+      <stop offset="100%" stop-color="#6FCB2E"/>
+    </linearGradient>
+    <linearGradient id="checkGrad" x1="5%" y1="90%" x2="95%" y2="0%">
+      <stop offset="0%" stop-color="#57B62E"/>
+      <stop offset="60%" stop-color="#6FCB2E"/>
+      <stop offset="100%" stop-color="#8FE23A"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.32"/>
+      <stop offset="40%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- LAYER 1: cross. Bounding box and quadrant center match the measured
+       pixel geometry already used by AnimatedLogo.jsx's clip-path pieces
+       (icon x 18.9%-91.3%, y 2.2%-82.5% of the 900x741 canvas; quadrant
+       center at 55.1%/42.3% of that icon box) - viewBox here is 900x741,
+       the source PNG's actual pixel dimensions, not an unrelated aspect
+       ratio. -->
+  <g id="cross">
+    <rect x="444" y="16" width="170" height="595" rx="34" ry="34" fill="url(#crossGrad)"/>
+    <rect x="170" y="183" width="652" height="170" rx="34" ry="34" fill="url(#crossGrad)"/>
+    <rect x="444" y="16" width="170" height="595" rx="34" ry="34" fill="url(#gloss)"/>
+    <rect x="170" y="183" width="652" height="170" rx="34" ry="34" fill="url(#gloss)"/>
+  </g>
+
+  <!-- LAYER 2: checkmark - short left stroke, long tapering right stroke
+       extending past the cross's top-right corner, dark outline (this is
+       genuinely a dark stroke on the real mark, confirmed at high zoom -
+       not white as it first appeared at thumbnail size). -->
+  <g id="checkmark">
+    <polygon points="175,284 444,522 845,8 695,195 444,440 300,340"
+      fill="url(#checkGrad)" stroke="#0F2A14" stroke-width="10" stroke-linejoin="round"/>
+  </g>
+
+  <!-- LAYER 3: wordmark -->
+  <g id="wordmark">
+    <text x="450" y="716" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700"
+      font-size="62" letter-spacing="11" fill="#122a46">SHEER HEALTH</text>
+  </g>
+</svg>

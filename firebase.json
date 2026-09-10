@@ -1,0 +1,54 @@
+{
+  "hosting": {
+    "public": "build",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/detail/**",
+        "function": "ssrBlogMeta"
+      },
+      { "source": "/og-fallback.png", "destination": "/og-fallback.png" },
+      { "source": "/home", "destination": "/index.html" },
+      { "source": "/Appoinment", "destination": "/index.html" },
+      { "source": "/medicalservices", "destination": "/index.html" },
+      { "source": "/login", "destination": "/index.html" },
+      { "source": "/register", "destination": "/index.html" },
+      { "source": "/contact", "destination": "/index.html" },
+      { "source": "/OurDoctors", "destination": "/index.html" },
+      { "source": "/Location", "destination": "/index.html" },
+      { "source": "/service", "destination": "/index.html" },
+      { "source": "/create", "destination": "/index.html" },
+      { "source": "/CBlog", "destination": "/index.html" },
+      { "source": "/reset", "destination": "/index.html" },
+      { "source": "/verify-email", "destination": "/index.html" },
+      { "source": "/addfaq", "destination": "/index.html" },
+      { "source": "/addservice", "destination": "/index.html" },
+      {
+        "source": "/*",
+        "function": "ssrBlogMeta"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ]
+}

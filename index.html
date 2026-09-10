@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/src/assets/images/logo1.png" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sheer Health</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Must run here, not inside main.jsx: GSAP's ScrollTrigger reads
+      // history.scrollRestoration once at its own module-init time and
+      // later restores the property back to whatever it captured. Since
+      // ES module imports are hoisted and fully evaluated before any
+      // module's own body code runs, setting this from inside main.jsx
+      // (after `import App`) happens AFTER ScrollTrigger has already
+      // captured "auto" as its baseline - so it gets flipped back.
+      // Setting it here, before the module script even loads, wins that
+      // race: ScrollTrigger then captures "manual" as its baseline and
+      // its own restores never undo it.
+      if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+      }
+      window.scrollTo(0, 0);
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

@@ -1,0 +1,214 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base{
+    section{
+        @apply py-16 md:py-24
+    }
+}
+
+
+@layer components{
+    .container {
+        @apply max-w-full w-[1440px] px-5 mx-auto
+    }
+
+    
+.btn{
+    @apply bg-primaryColor py-[15px] px-[35px] rounded-[50px] text-white font-[600] mt-[38px]
+}
+
+.heading{
+    @apply text-[44px] leading-[54px] font-[700] text-headingColor
+}
+
+.text_para{
+    @apply text-[18px] leading-[30px] font-[400] text-textColor mt-[18px]
+}
+.header {
+    @apply bg-[url('./assets/images/mask.png')] bg-no-repeat bg-center bg-cover w-full h-[100px] leading-[100px]
+}
+.hero_section{
+    @apply bg-[url('./assets/images/hero-bg.png')] bg-no-repeat bg-center bg-cover
+}
+
+/* Unified CTA buttons — one primary, one clearly-distinct secondary, both built on
+   the project's actual primaryColor token instead of ad-hoc Tailwind/Bootstrap blues. */
+.btn-primary {
+    @apply inline-block bg-primaryColor text-white font-[600] rounded-[50px] px-8 py-4 leading-none transition-colors duration-200;
+}
+.btn-primary:hover {
+    background-color: #0052cc;
+}
+.btn-secondary {
+    @apply inline-block bg-white text-primaryColor font-[600] rounded-[50px] px-8 py-4 leading-none border-2 border-primaryColor transition-colors duration-200;
+}
+.btn-secondary:hover {
+    @apply bg-primaryColor text-white;
+}
+
+/* Unified form input/textarea treatment used across Login, Signup, Contact,
+   Appointment and the comment box. */
+.form-input {
+    @apply block w-full py-4 px-4 border border-gray-300 rounded-lg bg-white text-textColor;
+}
+.form-input:focus {
+    @apply outline-none border-primaryColor ring-2 ring-primaryColor;
+}
+
+/* Card/modal title — the "small heading" tier, distinct from the 44px .heading
+   tier used for major page sections. */
+.card-heading {
+    @apply text-[24px] leading-[32px] font-[700] text-headingColor;
+}
+
+/* Rich-text post body (Detail.jsx's sanitized contentHtml render, and the
+   TipTap editor's own content area in AddEditBlog.jsx). Tailwind's preflight
+   reset strips default heading sizes and list bullets/numbers, so without
+   this the formatting a post author applies would be invisible to readers -
+   bold/italic/underline survive preflight fine, headings and lists don't. */
+.blog-content h1 {
+    @apply text-[28px] leading-[36px] font-[700] text-headingColor mt-6 mb-3;
+}
+.blog-content h2 {
+    @apply text-[24px] leading-[32px] font-[700] text-headingColor mt-5 mb-3;
+}
+.blog-content h3 {
+    @apply text-[20px] leading-[28px] font-[700] text-headingColor mt-4 mb-2;
+}
+.blog-content p {
+    @apply mb-4 leading-7;
+}
+.blog-content ul {
+    @apply list-disc pl-6 mb-4;
+}
+.blog-content ol {
+    @apply list-decimal pl-6 mb-4;
+}
+.blog-content li {
+    @apply mb-1;
+}
+}
+
+.scroll-reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.scroll-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.scroll-reveal-left {
+    opacity: 0;
+    transform: translateX(-60px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.scroll-reveal-left-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.scroll-reveal-right {
+    opacity: 0;
+    transform: translateX(60px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+.scroll-reveal-right-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@keyframes logoEntrance {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+}
+.logo-entrance {
+    animation: logoEntrance 0.5s ease-out both;
+    transition: transform 0.25s ease-out, filter 0.25s ease-out;
+}
+.logo-entrance:hover {
+    transform: scale(1.06);
+    filter: drop-shadow(0 0 6px rgba(0, 103, 255, 0.35));
+}
+
+/* Hover-only interaction (split out of .logo-entrance above) so it can be
+   applied to AnimatedLogo's settled base image without reintroducing that
+   class's fade/scale-in keyframe, which the piece-assembly animation now
+   replaces as the entrance effect. */
+.logo-hover {
+    transition: transform 0.25s ease-out, filter 0.25s ease-out;
+}
+.logo-hover:hover {
+    transform: scale(1.06);
+    filter: drop-shadow(0 0 6px rgba(0, 103, 255, 0.35));
+}
+
+/* Per-piece transition used by AnimatedLogo.jsx - values (transform/opacity/
+   filter/transitionDelay) are set inline per piece since they're data-driven.
+   The transform curve overshoots slightly past 1 (a "back ease out") before
+   settling, giving each piece a soft bounce as it lands instead of a flat
+   stop - opacity/filter fade on their own, gentler curves so the fade and
+   the shadow-lifting-away don't bounce along with the position. */
+.logo-piece {
+    transition: transform 0.75s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease-out, filter 0.6s ease-out;
+    will-change: transform, opacity, filter;
+}
+
+/* Subtle ambient "alive" motion once the entrance has landed - applied to
+   the whole frame (image + would-be pieces) so it reads as one soft breath,
+   not a flicker. Small enough (1.8% scale, faint glow) to stay premium
+   rather than gimmicky. */
+@keyframes logoIdleBreathe {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0, 103, 255, 0)); }
+    50% { transform: scale(1.018); filter: drop-shadow(0 0 8px rgba(0, 103, 255, 0.22)); }
+}
+.logo-idle-breathe {
+    animation: logoIdleBreathe 5s ease-in-out infinite;
+}
+
+/* Fires once each time the header crosses the sticky threshold (handleStickyHeader
+   in Header.jsx toggles .sticky_header via classList - adding a class that already
+   has an `animation` re-triggers it only on the absent->present transition, so this
+   doesn't restart on every scroll tick while already stuck). Scoped by ancestry to
+   the Header's logo only - Footer's frame is never inside a .sticky_header element. */
+@keyframes logoScrollPulse {
+    0% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0, 103, 255, 0)); }
+    45% { transform: scale(1.07); filter: drop-shadow(0 4px 10px rgba(0, 103, 255, 0.3)); }
+    100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(0, 103, 255, 0)); }
+}
+.sticky_header .animated-logo-frame {
+    animation: logoScrollPulse 0.6s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .logo-piece {
+        transition: none;
+    }
+    .logo-idle-breathe,
+    .sticky_header .animated-logo-frame {
+        animation: none;
+    }
+}
+ @media only screen and (max-width: 1024px) {
+    .container{
+        @apply w-full
+    }
+    section {
+        @apply py-[35px]
+    }
+    
+ }
+
+ @media only screen and (max-width: 768px) {
+    .heading{
+        @apply text-[26px] leading-[36px]
+    }
+    .text_para {
+        @apply text-[16px] leading-7 mt-3;
+    }
+    
+ }

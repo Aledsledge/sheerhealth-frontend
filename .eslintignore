@@ -1,0 +1,5 @@
+# Ignore all files in the project
+**
+
+# Include specific files or directories
+!src/components/Header/Header.jsx

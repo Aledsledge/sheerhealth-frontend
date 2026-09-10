@@ -4,6 +4,7 @@ import { BsArrowRight } from 'react-icons/bs';
 import { getAllMedicalServices, deleteMedicalService } from '../../services/medicalservice';
 import ServiceModal from './ServiceModal';
 import { initServiceDeckAnimation } from './serviceDeckAnimation';
+import { useAuthValue } from '../../pages/AuthContext';
 
 // Firestore's `services` documents only carry title/description (see
 // Addservices.jsx and medicalservice.js - no image field exists yet), so
@@ -42,13 +43,7 @@ const getServiceImage = (title, index) => {
 };
 
 const MedicalServicesList = () => {
-  const userData = localStorage.getItem("USER");
-  let currentUser = null;
-  let isAdmin = false;
-  if (userData) {
-    currentUser = JSON.parse(userData);
-    isAdmin = currentUser.isAdmin;
-  }
+  const { isAdmin } = useAuthValue() || {};
 
   const [medicalServices, setMedicalServices] = useState([]);
   const [activeService, setActiveService] = useState(null);

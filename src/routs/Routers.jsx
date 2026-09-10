@@ -22,7 +22,8 @@ import VarifyEmail from "../pages/VerifyEmail";
 
 
 import {onAuthStateChanged} from 'firebase/auth'
-import useAdmin from "../utils/hooks"
+import ProtectedRoute from "../components/ProtectedRoute";
+import useAdmin from "../utils/hooks";
 import { auth } from "../firebase";
 import OurDoctors from "../pages/OurDoctors";
 import Location from "../pages/Location";
@@ -39,7 +40,7 @@ const Routers = () => {
   const [user, setUser] = useState(null);
   const [currentUser, setCurrentUser] = useState(null)
   const [timeActive, setTimeActive] = useState(false)
-  useAdmin()
+  const { isAdmin, isAuthenticated, loading: isAdminLoading } = useAdmin()
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       setUser(user||{});
@@ -49,7 +50,7 @@ const Routers = () => {
   }, [])
   
   return (
-    <AuthProvider  value={{currentUser, timeActive, setTimeActive}}>
+    <AuthProvider  value={{currentUser, isAdmin, isAuthenticated, isAdminLoading, timeActive, setTimeActive}}>
    <Suspense fallback={null}>
    <Routes>
 
@@ -64,17 +65,17 @@ const Routers = () => {
     <Route path="OurDoctors" element={<OurDoctors/>} />
     <Route path="Location" element={<Location/>} />
     <Route path="service" element={<Services/>} />
-    <Route path="/create"element={ <AddEditBlog user={user}  /> }/>
-    <Route path="/update/:id" element={ <AddEditBlog user={user}  /> } />
+    <Route path="/create" element={ <ProtectedRoute><AddEditBlog user={user} /></ProtectedRoute> }/>
+    <Route path="/update/:id" element={ <ProtectedRoute><AddEditBlog user={user} /></ProtectedRoute> } />
     <Route path="CBlog"element={ <CBlog   user={user}  />  }/>
     <Route path="/reset" element={<Reset />} />
       <Route path="/verify-email" element={<VarifyEmail />} />
-    <Route path="/detail/:id"  element={<Detail user={user} />}/> 
+    <Route path="/detail/:id"  element={<Detail user={user} />}/>
 
-    <Route path="/addfaq"element={ <AddFaq user={user}  /> }/>
-    <Route path="/updateFaq/:id" element={ <AddFaq user={user}  /> } />
-    <Route path="/addservice"element={ < Addservices user={user}  /> }/>
-    <Route path="/updateservice/:id" element={ < Addservices user={user}  /> } />
+    <Route path="/addfaq" element={ <ProtectedRoute><AddFaq user={user} /></ProtectedRoute> }/>
+    <Route path="/updateFaq/:id" element={ <ProtectedRoute><AddFaq user={user} /></ProtectedRoute> } />
+    <Route path="/addservice" element={ <ProtectedRoute><Addservices user={user} /></ProtectedRoute> }/>
+    <Route path="/updateservice/:id" element={ <ProtectedRoute><Addservices user={user} /></ProtectedRoute> } />
 
     {/* SEO-friendly canonical blog URL (e.g. /12-meridians-one-system...).
         A single dynamic segment ranks below every static route above it in

@@ -1,16 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { excerpt, formatDate } from "../utility";
+import { useAuthValue } from "../pages/AuthContext";
 import logo from "../assets/images/logo1.png";
 
 const BlogSection = ({ id, slug, title, description, category, imgUrl, userId, author, timestamp, handleDelete }) => {
-  const userData = localStorage.getItem("USER");
-  let currentUser = null;
-  let isAdmin = false;
-  if (userData) {
-    currentUser = JSON.parse(userData);
-    isAdmin = currentUser.isAdmin;
-  }
+  const { isAdmin } = useAuthValue() || {};
   // Canonical SEO-friendly URL once a post has a slug, falling back to the
   // legacy /detail/:id form for the rare post that somehow doesn't yet.
   const detailPath = slug ? `/${slug}` : `/detail/${id}`;

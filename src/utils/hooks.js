@@ -3,41 +3,54 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
+// Live admin/auth status backed by Firebase Auth + the users/{uid}.admin
+// Firestore flag. Deliberately does NOT touch localStorage: the old
+// localStorage 'USER' cache was writable from devtools, so any gate built on
+// it (route guards, edit buttons) was decorative. `loading` stays true until
+// the auth state and — when signed in — the Firestore role lookup resolve,
+// so callers can hold rendering instead of flashing the wrong state on
+// refresh.
 export default function useAdmin() {
-  const [user, setUser] = useState(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [status, setStatus] = useState({
+    isAdmin: false,
+    isAuthenticated: false,
+    loading: true,
+  });
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        const userData = { ...currentUser };
-        setUser(userData);
-        const userRef = doc(db, 'users', userData.uid);
-        getDoc(userRef)
-          .then((doc) => {
-            if (doc.exists) {
-              const userData = doc.data();
-              userData.isAdmin = userData.admin;
-              localStorage.setItem('USER', JSON.stringify(userData || {}));
-              if (userData && userData.admin) {
-                setIsAdmin(true);
-              } else {
-                setIsAdmin(false);
-              }
-            }
-          })
-          .catch((error) => {
-            console.log('Error fetching user data:', error);
-          });
-      } else {
-        localStorage.removeItem('USER');
-        setUser(null);
-        setIsAdmin(false);
+    let cancelled = false;
+
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (!currentUser) {
+        if (!cancelled) {
+          setStatus({ isAdmin: false, isAuthenticated: false, loading: false });
+        }
+        return;
+      }
+
+      if (!cancelled) {
+        setStatus({ isAdmin: false, isAuthenticated: true, loading: true });
+      }
+
+      try {
+        const snapshot = await getDoc(doc(db, 'users', currentUser.uid));
+        const isAdmin = snapshot.exists() && snapshot.data().admin === true;
+        if (!cancelled) {
+          setStatus({ isAdmin, isAuthenticated: true, loading: false });
+        }
+      } catch (error) {
+        console.error('useAdmin: role lookup failed', error);
+        if (!cancelled) {
+          setStatus({ isAdmin: false, isAuthenticated: true, loading: false });
+        }
       }
     });
 
-    return () => unsubscribe();
+    return () => {
+      cancelled = true;
+      unsubscribe();
+    };
   }, []);
 
-  return isAdmin;
+  return status;
 }

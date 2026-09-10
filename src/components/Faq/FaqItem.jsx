@@ -5,15 +5,10 @@ import { getAllFaqs, deleteFaq } from '../../services/FaqService';
 import { Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuthValue } from '../../pages/AuthContext';
 
 const FaqItem = () => {
-  const userData = localStorage.getItem('USER');
-  let currentUser = null;
-  let isAdmin = false;
-  if (userData) {
-    currentUser = JSON.parse(userData);
-    isAdmin = currentUser.isAdmin;
-  }
+  const { isAdmin } = useAuthValue() || {};
 
   const [faqs, setFaqs] = useState([]);
   const [openStates, setOpenStates] = useState({});

@@ -12,7 +12,7 @@ import SmoothScroll from '../components/SmoothScroll/SmoothScroll';
 const Layout = () => {
   const [active] = useState('CBlog');
   const [user, setUser] = useState(null);
-  const isAdmin = useAdmin(); // Get the isAdmin value from the useAdmin hook
+  const { isAdmin, isAuthenticated, loading: isAdminLoading } = useAdmin();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -37,7 +37,7 @@ const Layout = () => {
     <SmoothScroll>
       <Header active={active} user={user} logout={logout} isAdmin={isAdmin} /> {/* Pass logout and isAdmin as props to Header */}
       <ScrollToTop />
-      <AuthProvider value={{ currentUser: user, timeActive: false, setTimeActive: () => {} }}>
+      <AuthProvider value={{ currentUser: user, isAdmin, isAuthenticated, isAdminLoading, timeActive: false, setTimeActive: () => {} }}>
         <main>
           <Routers />
         </main>

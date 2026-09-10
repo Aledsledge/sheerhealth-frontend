@@ -20,20 +20,14 @@ import {
 } from "firebase/firestore";
 import { getBlog, getBlogBySlug, updateBlog } from "../services/blog.service";
 import { formatDate } from "../utility";
+import { useAuthValue } from "./AuthContext";
 
 const Detail = ({ setActive, user }) => {
   const userId = user?.uid;
-  // Same localStorage 'USER' convention used elsewhere in this app
-  // (ServiceCard.jsx, FaqItem.jsx, BlogSection.jsx) - useAdmin() in
-  // Routers.jsx is the only place that actually subscribes to admin status;
-  // every other component reads the snapshot it caches there.
-  let isAdmin = false;
-  try {
-    const cachedUser = localStorage.getItem('USER');
-    if (cachedUser) isAdmin = !!JSON.parse(cachedUser).isAdmin;
-  } catch {
-    isAdmin = false;
-  }
+  // Live admin status from AuthContext (Firebase Auth + users/{uid}.admin).
+  // Only gates the comment delete-any button; the real write authorization
+  // is enforced by Firestore rules.
+  const { isAdmin } = useAuthValue() || {};
   // /:slug (new canonical route) supplies `slug`; the legacy /detail/:id
   // route supplies `id`. Exactly one of the two is present depending on
   // which route matched.
